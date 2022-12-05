@@ -17,7 +17,7 @@ def ping():
 @app.route('/api/v1/locations',methods=['GET'])
 def obtenerlocations():
     #comprobar api key entregada
-    compania = request.headers.get('company_api_key')
+    compania = request.args.get('company_api_key')
     company_id=comprobar_company_api_key(compania)
     if company_id=='error':
         return 'company_api_key error',400
@@ -28,7 +28,7 @@ def obtenerlocations():
 @app.route('/api/v1/locations/<id>',methods=['GET'])
 def obtenerlocation(id):
     #comprobar api key entregada
-    compania = request.headers.get('company_api_key')
+    compania = request.args.get('company_api_key')
     company_id=comprobar_company_api_key(compania)
     if company_id=='error':
         return 'company_api_key error',400
@@ -39,7 +39,7 @@ def obtenerlocation(id):
 
 @app.route('/api/v1/locations/<id>',methods=['PUT'])
 def editarlocation(id):
-    compania = request.headers.get('company_api_key')
+    compania = request.args.get('company_api_key')
     company_id=comprobar_company_api_key(compania)
     if company_id=='error':
         return 'company_api_key error',400
@@ -53,7 +53,7 @@ def editarlocation(id):
 
 @app.route('/api/v1/locations/<id>',methods=['DELETE'])
 def eliminarlocation(id):
-    compania = request.headers.get('company_api_key')
+    compania = request.args.get('company_api_key')
     company_id=comprobar_company_api_key(compania)
     if company_id=='error':
         return 'company_api_key error',400
@@ -65,7 +65,7 @@ def eliminarlocation(id):
 @app.route('/api/v1/sensores',methods=['GET'])
 def obtenersensores():
     #comprobar api key entregada
-    compania = request.headers.get('company_api_key')
+    compania = request.args.get('company_api_key')
     company_id=comprobar_company_api_key(compania)
     if company_id=='error':
         return 'company_api_key error',400
@@ -76,7 +76,7 @@ def obtenersensores():
 @app.route('/api/v1/sensores/<id>',methods=['GET'])
 def obtenersensor(id):
     #comprobar api key entregada
-    compania = request.headers.get('company_api_key')
+    compania = request.args.get('company_api_key')
     company_id=comprobar_company_api_key(compania)
     if company_id=='error':
         return 'company_api_key error',400
@@ -87,7 +87,7 @@ def obtenersensor(id):
 
 @app.route('/api/v1/sensores/<id>',methods=['PUT'])
 def editarsensores(id):
-    compania = request.headers.get('company_api_key')
+    compania = request.args.get('company_api_key')
     company_id=comprobar_company_api_key(compania)
     if company_id=='error':
         return 'company_api_key error',400
@@ -103,7 +103,7 @@ def editarsensores(id):
 
 @app.route('/api/v1/sensores/<id>',methods=['DELETE'])
 def eliminarsensores(id):
-    compania = request.headers.get('company_api_key')
+    compania = request.args.get('company_api_key')
     company_id=comprobar_company_api_key(compania)
     if company_id=='error':
         return 'company_api_key error',400
@@ -133,7 +133,7 @@ def addsensordata():
 
 @app.route('/api/v1/sensor_data',methods=['GET'])
 def obtenerdatos():
-    conpania = request.headers.get('company_api_key')
+    conpania = request.args.get('company_api_key')
     From = request.args.get('from')
     if From == '':
         From=0
@@ -142,7 +142,7 @@ def obtenerdatos():
         to=9223372036854775807#valor 
     sensores =request.args.get('sensor_id')
     sensores=ast.literal_eval(sensores)
-    print(sensores)
+    #print(sensores)
     
     id_company=comprobar_company_api_key(conpania)
     if id_company=='error':
@@ -150,9 +150,10 @@ def obtenerdatos():
     
     respuesta=[]
     for i in sensores:
+        print(i)
         respuesta.append(obtener_datos(From,to,i))
 
-        return jsonify(respuesta)
+    return jsonify(respuesta)
 
 #-----------------------------------ADMIN--------------------------------------------------
 
@@ -169,7 +170,7 @@ def crearcompany():
     key = generate()
     clave=key.get_key()
     create_company(id,company_name,clave)
-    return 'company create',201
+    return 'company create %s'%clave,201
 
 @app.route('/api/v1/createlocation',methods=['POST'])
 def crearlocation():
@@ -225,7 +226,7 @@ def crearsensor():
     clave=key.get_key()
     
     create_sensor(location_id,sensor_id,sensor_name,sensor_category,sensor_meta,clave)
-    return 'sensor create',201
+    return 'sensor create %s'%clave,201
 
 
 if __name__== '__main__':
